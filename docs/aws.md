@@ -178,4 +178,10 @@ kubectl bind https://<klutch.example.com>:443/export \
   --context kind-klutch-app
 ```
 
+Once authenticated, you can select the service to bind using the Klutch web UI, as shown below:
+
+![Bind an a9s Data Service using the web UI](images/klutch-bind-ui.png)
+
+You can now start provisioning data services, your App Cluster is fully configured and **ready to go!**
+
 Your Klutch environment is now fully deployed and ready to use.

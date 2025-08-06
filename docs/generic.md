@@ -390,3 +390,9 @@ export URL of your Klutch backend.
     This command initiates the OIDC authentication flow and installs the `konnector` in the Application Cluster. The
     `konnector` is a lightweight agent that facilitates communication between the Application Cluster and the Control
     Plane, enabling you to provision and manage data services.
+
+Once authenticated, you can select the service to bind using the Klutch web UI, as shown below:
+
+![Bind an a9s Data Service using the web UI](images/klutch-bind-ui.png)
+
+You can now start provisioning data services, your App Cluster is fully configured and **ready to go!**

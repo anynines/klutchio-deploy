@@ -28,11 +28,11 @@ for your operating system. *Tested with version:* 1.19.3
 
 4.  **Configure Host Access (Command Line)**:
     *   **Enable Hostname for TLS**: The Klutch backend needs to communicate with the Kubernetes API server using a
-        stable hostname. Run the following command in your terminal to add a TLS SAN (Subject Alternative Name) for
+        stable hostname. On macOS, run the following command in your terminal to add a TLS SAN (Subject Alternative Name) for
         `host.lima.internal` and `host.docker.internal` to the K3s server.
 
         ```bash
-        ❯ echo -e "env:\n  K3S_EXEC: --tls-san host.lima.internal --tls-san host.docker.internal" > ~/Library/Application\ Support/rancher-desktop/lima/_config/override.yaml
+        echo -e "env:\n  K3S_EXEC: --tls-san host.lima.internal --tls-san host.docker.internal" > ~/Library/Application\ Support/rancher-desktop/lima/_config/override.yaml
         ```
         **Note**: After running this command, you must **Quit and Restart** Rancher Desktop for the change to take effect.
 
@@ -83,9 +83,7 @@ The script automates all the necessary steps to get your environment ready:
 5.  **Creates Application Cluster**: Finally, it uses `k3d` to create a separate cluster named `klutch-app`. This
      cluster will act as the consumer of your data services.
 
----
-
-## Step 2: Bind the Application Cluster
+## Bind to Klutch’s APIs from the Application Cluster
 
 After the script completes successfully, it will display a final command that you must run manually. This command binds
 your new `klutch-app` cluster to the control plane running in Rancher Desktop.
@@ -101,6 +99,17 @@ kubectl bind http://host.lima.internal/export \
 This command uses the `kubectl-bind` plugin to install a lightweight "konnector" pod into the `klutch-app` cluster,
 which acts as a secure proxy to the control plane.
 
+For this environment, use the following credentials:
+
+* **Email Address:** `admin@example.com`
+* **Password:** `password`
+
+Once authenticated, you can select the service to bind using the Klutch web UI, as shown below:
+
+![Bind an a9s Data Service using the web UI](images/klutch-bind-ui.png)
+
+You can now start provisioning data services, your App Cluster is fully configured and **ready to go!**
+
 **Note:** If the login page displays a `400 Bad Request` or `Request Header Or Cookie Too Large` error, please **clear the cookies**
 for the `host.lima.internal` site in your browser and try again.
 
@@ -114,6 +123,5 @@ When you are finished, you can tear down the environment:
     ```
 2.  **Reset the Rancher Desktop cluster**:
     *   Open the Rancher Desktop GUI.
-    *   Click the **Kubernetes Settings** tab.
-    *   Click **Reset Kubernetes**.
-    *   Alternatively, you can simply quit the Rancher Desktop application.
+    *   Click the **Troubleshooting** tab.
+    *   Click **Factory Reset**.
