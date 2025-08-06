@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: external-pg-service
+spec:
+  type: ExternalName
+  externalName: host.docker.internal
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
