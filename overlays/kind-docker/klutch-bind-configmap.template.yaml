@@ -1,0 +1,9 @@
+# overlays/kind-docker/klutch-bind-configmap.template.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: klutch-bind-backend-config
+  namespace: bind
+data:
+  external-address: "https://host.docker.internal:__API_SERVER_PORT__"
+  

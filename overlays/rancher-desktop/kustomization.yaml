@@ -24,7 +24,7 @@ configMapGenerator:
   - name: klutch-bind-backend-config
     namespace: bind  
     literals:
-      - external-address=https://host.lima.internal:6443
+      - external-address=https://host.docker.internal:6443
 
 secretGenerator:
   - name: cookie-config

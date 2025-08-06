@@ -6,7 +6,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: imavridis@anynines.com
+    email: user@klutch-test.com
     privateKeySecretRef:
       name: letsencrypt
     solvers:

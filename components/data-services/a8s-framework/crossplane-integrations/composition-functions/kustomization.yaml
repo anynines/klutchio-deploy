@@ -4,4 +4,4 @@ kind: Kustomization
 namespace: crossplane-system
 
 resources:
-  - https://raw.githubusercontent.com/anynines/klutchio/v1.3.0/crossplane-api/deploy/functions/function-patch-and-transform.yaml
+  - https://raw.githubusercontent.com/anynines/klutchio/v1.3.2/crossplane-api/deploy/functions/function-patch-and-transform.yaml

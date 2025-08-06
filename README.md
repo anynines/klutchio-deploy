@@ -3,6 +3,25 @@
 This repository provides the necessary Kustomize configurations and automation scripts to install Klutch and its
 dependencies across various Kubernetes environments.
 
+### Table of Contents
+
+*   [Overview](#overview)
+    *   [Core Components & Flexibility](#core-components--flexibility)
+    *   [Control Plane Cluster](#control-plane-cluster)
+    *   [App Cluster](#app-cluster)
+*   [Installation Instructions](#installation-instructions)
+*   [Prerequisites](#prerequisites)
+    *   [General Requirements](#general-requirements)
+    *   [Environment-Specific Requirements](#environment-specific-requirements)
+*   [Installing the `kubectl-bind` CLI](#installing-the-kubectl-bind-cli)
+    *   [1. Download the Binary](#1-download-the-binary)
+    *   [2. Install the Binary](#2-install-the-binary)
+    *   [3. Verify the Installation](#3-verify-the-installation)
+*   [Managing Component Versions](#managing-component-versions)
+    *   [1. Helm-Based Components](#1-helm-based-components)
+    *   [2. Container Image-Based Components](#2-container-image-based-components)
+    *   [3. URL-Based Components](#3-url-based-components)
+
 ## Overview
 
 KlutchIO is an open-source, Kubernetes-native tool designed to simplify data service management across multiple clusters.
@@ -14,8 +33,7 @@ using a Kustomize base/overlay pattern:
 *   `components/`: Includes the core services required to run Klutch, such as the Klutch backend, Crossplane, the a8s
 data services framework, OIDC integration, and other essential cluster services.
 *   `overlays/`: Provides environment-specific patches and configurations for different targets like [Kind](https://kind.sigs.k8s.io/),
-[Rancher Desktop](https://rancherdesktop.io/), [OpenShift](https://www.redhat.com/en/technologies/cloud-computing/openshift),
-and [AWS](https://aws.amazon.com/).
+[Rancher Desktop](https://rancherdesktop.io/) and [AWS](https://aws.amazon.com/).
 *   `scripts/`: Includes automation scripts to streamline the installation process for each supported environment.
 *   `docs/`: Contains installation guides.
 *   `example/`: Offers working examples that show how to provision a PostgreSQL instance and connect it to a demo application in a Kind environment.
@@ -85,7 +103,7 @@ generic guide serves as a template to help you create a new overlay based on you
 ### Environment-Specific Requirements
 
 *   **Local Development**:
-    *   **Kind** or **Rancher Desktop** or **OpenShift CodeReady Containers (CRC)**.
+    *   **Kind** or **Rancher Desktop**.
     *   Minimum **14 GB of RAM** and **6 CPU cores** allocated to your virtual machine or container runtime.
 *   **Cloud Providers (e.g., AWS)**:
     *   **Node Requirements**: If you plan to host highly available, container-based data services using the a8s framework

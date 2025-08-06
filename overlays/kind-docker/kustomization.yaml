@@ -8,7 +8,7 @@ resources:
   - ../../components/klutch-bind-backend
   - klutch-bind-ingress.yaml
   - a8s-backup-config.yaml
-
+  - generated-klutch-config.yaml
 
 
 configMapGenerator:
@@ -16,10 +16,6 @@ configMapGenerator:
     namespace: bind
     files:
       - config.yaml=dex-config.yaml
-  - name: klutch-bind-backend-config
-    namespace: bind
-    literals:
-      - external-address=https://host.docker.internal:6443 # the port is defined in the kind configuration file
 
 secretGenerator:
   - name: cookie-config
