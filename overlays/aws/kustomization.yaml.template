@@ -1,0 +1,36 @@
+# klutch-install/overlays/aws/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../components/klutch-bind-backend
+
+
+configMapGenerator:
+  - name: klutch-bind-backend-config
+    namespace: bind  
+    literals:
+      - external-address="${EXTERNAL_ADDRESS}"
+
+secretGenerator:
+  - name: oidc-config
+    namespace: bind
+    literals:
+      - OIDC-ISSUER-CLIENT-ID="${OIDC_ISSUER_CLIENT_ID}"
+      - OIDC-ISSUER-CLIENT-SECRET="${OIDC_ISSUER_CLIENT_SECRET}"
+      - OIDC-ISSUER-URL="${OIDC_ISSUER_URL}"
+      - OIDC-CALLBACK-URL="${OIDC_CALLBACK_URL}"
+  - name: cookie-config
+    namespace: bind
+    literals:
+      - COOKIE-SIGNING-KEY="${COOKIE_SIGNING_KEY}"
+      - COOKIE-ENCRYPTION-KEY="${COOKIE_ENCRYPTION_KEY}"
+  - name: k8sca
+    namespace: bind
+    files:
+      - ca=klutch-control-plane-ca.crt
+
+
+
+generatorOptions:
+  disableNameSuffixHash: true

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: a8s-backup-store-config
+  namespace: a8s-system
+data:
+  backup-store-config.yaml: |
+    config:
+      cloud_configuration:
+        provider: AWS
+        container: a8s-backups
+        region: eu-central-1
+        endpoint: http://minio.minio-dev.svc.cluster.local:9000
+        path_style: true
+
+---
+# 2. Secret containing the credentials for the backup store.
+# This should be managed locally and NOT committed to Git, just like the Minio secret.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: a8s-backup-storage-credentials
+  namespace: a8s-system
+type: Opaque
+stringData:
+  # These are the credentials for the 'a8s-user' we created in the Minio component
+  access-key-id: a8s-user
+  secret-access-key: a8s-password
+  encryption-password: "C9v%EL5a4PZpM8zNXqfHlxAuGR&|OJ/>ny^kWI0he21VY*#ob3g-c+K7TtSrmw6s"
+  # For real AWS S3, you would put your IAM user credentials here.

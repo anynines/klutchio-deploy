@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: klutch-bind-backend
+  namespace: bind
+  annotations:
+    # This annotation tells cert-manager to use our Let's Encrypt issuer
+    cert-manager.io/issuer: "letsencrypt"
+    # This is a good practice to force HTTPS
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"    
+spec:
+  ingressClassName: nginx
+  # This section configures TLS using the certificate cert-manager will create
+  tls:
+  - hosts:
+    # --- IMPORTANT: Use your new public hostname here ---
+    - klt-359-im.a8s-dev.a9s.eu
+    # cert-manager will create and manage a secret with this name
+    secretName: klutch-bind-backend-tls
+  rules:
+  # This rule routes traffic for your public hostname
+  - host: klt-359-im.a8s-dev.a9s.eu # <-- Use your new public hostname here
+    http:
+      paths:
+      - path: /dex
+        pathType: Prefix
+        backend:
+          service:
+            name: dex
+            port:
+              number: 5556
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: klutch-bind-backend
+            port:
+              # The backend service is expecting TLS on this port
+              number: 443

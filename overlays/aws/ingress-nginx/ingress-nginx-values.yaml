@@ -1,0 +1,34 @@
+controller:
+  service:
+    type: LoadBalancer
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+  replicaCount: 3
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - ingress-nginx
+        topologyKey: topology.kubernetes.io/zone
+  config:
+    allow-snippet-annotations: "false"
+    client-max-body-size: "2m"
+    proxy-connect-timeout: "10"
+    proxy-read-timeout: "10"
+    proxy-buffer-size: 16k
+    proxy-buffers: 4 16k
+    proxy-busy-buffers-size: 32k
+    large-client-header-buffers: "4 32k"

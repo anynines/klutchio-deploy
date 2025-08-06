@@ -1,0 +1,50 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.1/deploy/static/provider/kind/deploy.yaml
+  - ../../components/oidc/dex
+  - dex-ingress.yaml
+  - ../../components/klutch-bind-backend
+  - klutch-bind-ingress.yaml
+  - a8s-backup-config.yaml
+
+
+
+configMapGenerator:
+  - name: dex-config
+    namespace: bind
+    files:
+      - config.yaml=dex-config.yaml
+  - name: klutch-bind-backend-config
+    namespace: bind
+    literals:
+      - external-address=https://host.docker.internal:6443 # the port is defined in the kind configuration file
+
+secretGenerator:
+  - name: cookie-config
+    namespace: bind
+    literals: [COOKIE-SIGNING-KEY="NQ7BQKIpuj68FlksdjHfZIM9ZwmXN61M3632wIPaQmc=", COOKIE-ENCRYPTION-KEY="3wdxRGrS6nU4DvAQ5c/DPUL4ONOQS7Qym9lLAeqmtSI="]
+  - name: oidc-config
+    namespace: bind
+    literals:
+      - OIDC-ISSUER-CLIENT-ID="kube-bind"
+      - OIDC-ISSUER-CLIENT-SECRET="/1AnOQPjc9g3Q4P+8BG1rJQvEGcik0QtCt57TSsTFs8="
+      - OIDC-ISSUER-URL="http://host.docker.internal:8080/dex"
+      - OIDC-CALLBACK-URL="http://host.docker.internal:8080/callback"
+  - name: k8sca
+    namespace: bind
+    files:
+      - ca=klutch-control-plane-ca.crt
+  - name: minio-root-credentials
+    namespace: minio-dev
+    literals:
+      - rootUser="minioadmin"
+      - rootPassword="minioadmin"
+  - name: minio
+    namespace: minio-dev
+    literals:
+      - rootUser="minioadmin"
+      - rootPassword="minioadmin"
+generatorOptions:
+  disableNameSuffixHash: true

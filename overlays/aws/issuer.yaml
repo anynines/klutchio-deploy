@@ -1,0 +1,33 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt
+  namespace: bind
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: imavridis@anynines.com
+    privateKeySecretRef:
+      name: letsencrypt
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+---          
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: klutch-bind-backend-tls
+  namespace: bind
+spec:
+  # This secretName MUST match the secretName in your Ingress's tls block
+  secretName: klutch-bind-backend-tls
+  
+  # The DNS names on this certificate MUST match the hosts in your Ingress
+  dnsNames:
+  - klt-359-im.a8s-dev.a9s.eu
+  
+  # This tells cert-manager to use the Issuer you already created
+  issuerRef:
+    name: letsencrypt
+    kind: Issuer

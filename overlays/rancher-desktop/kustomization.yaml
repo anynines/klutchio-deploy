@@ -1,0 +1,65 @@
+##takes almost 3 minutes
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# --- STEP 1: LOAD THE ORIGINAL INSTALLER ---
+# This loads the resource that CONTAINS the default ConfigMap we want to patch.
+resources:
+  - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.1/deploy/static/provider/cloud/deploy.yaml
+
+  - ../../components/oidc/dex
+  - dex-ingress.yaml
+
+  - ../../components/klutch-bind-backend
+  - klutch-bind-backend-ingress.yaml
+
+
+configMapGenerator:
+  - name: dex-config
+    namespace: bind  
+    files:
+      - config.yaml=dex-config.yaml
+#backend      
+  - name: klutch-bind-backend-config
+    namespace: bind  
+    literals:
+      - external-address=https://host.lima.internal:6443
+
+secretGenerator:
+  - name: cookie-config
+    namespace: bind
+    literals: [COOKIE-SIGNING-KEY="NQ7BQKIpuj68FlksdjHfZIM9ZwmXN61M3632wIPaQmc=", COOKIE-ENCRYPTION-KEY="3wdxRGrS6nU4DvAQ5c/DPUL4ONOQS7Qym9lLAeqmtSI="]
+  - name: oidc-config
+    namespace: bind
+    literals:
+      - OIDC-ISSUER-CLIENT-ID="kube-bind"
+      - OIDC-ISSUER-CLIENT-SECRET="/1AnOQPjc9g3Q4P+8BG1rJQvEGcik0QtCt57TSsTFs8="
+      - OIDC-ISSUER-URL="http://host.lima.internal/dex"
+      - OIDC-CALLBACK-URL="http://host.lima.internal/callback"
+  - name: k8sca
+    namespace: bind
+    files:
+      - ca=klutch-control-plane-ca.crt
+
+  - name: minio-root-credentials
+    namespace: minio-dev
+    literals:
+      - rootUser="minioadmin"
+      - rootPassword="minioadmin"
+  - name: minio
+    namespace: minio-dev
+    literals:
+      - rootUser="minioadmin"
+      - rootPassword="minioadmin"     
+
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+patches:
+  - path: patches/change-backend-service-to-clusterip.yaml
+    target:
+      kind: Service
+      name: klutch-bind-backend
+      namespace: bind
