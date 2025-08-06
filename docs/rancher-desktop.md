@@ -28,11 +28,11 @@ for your operating system. *Tested with version:* 1.19.3
 
 4.  **Configure Host Access (Command Line)**:
     *   **Enable Hostname for TLS**: The Klutch backend needs to communicate with the Kubernetes API server using a
-        stable hostname. Run the following command in your terminal to add a TLS SAN (Subject Alternative Name) for
+        stable hostname. On macOS, run the following command in your terminal to add a TLS SAN (Subject Alternative Name) for
         `host.lima.internal` and `host.docker.internal` to the K3s server.
 
         ```bash
-        ❯ echo -e "env:\n  K3S_EXEC: --tls-san host.lima.internal --tls-san host.docker.internal" > ~/Library/Application\ Support/rancher-desktop/lima/_config/override.yaml
+        echo -e "env:\n  K3S_EXEC: --tls-san host.lima.internal --tls-san host.docker.internal" > ~/Library/Application\ Support/rancher-desktop/lima/_config/override.yaml
         ```
         **Note**: After running this command, you must **Quit and Restart** Rancher Desktop for the change to take effect.
 
@@ -114,6 +114,5 @@ When you are finished, you can tear down the environment:
     ```
 2.  **Reset the Rancher Desktop cluster**:
     *   Open the Rancher Desktop GUI.
-    *   Click the **Kubernetes Settings** tab.
-    *   Click **Reset Kubernetes**.
-    *   Alternatively, you can simply quit the Rancher Desktop application.
+    *   Click the **Troubleshooting** tab.
+    *   Click **Factory Reset**.
