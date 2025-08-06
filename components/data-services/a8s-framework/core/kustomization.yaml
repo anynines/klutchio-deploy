@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: a8s-system
+
+resources:
+  - https://raw.githubusercontent.com/anynines/a8s-deployment/v1.2.0/deploy/a8s/manifests/a8s-system-namespace.yaml
+  - https://raw.githubusercontent.com/anynines/a8s-deployment/v1.2.0/deploy/a8s/manifests/postgresql-operator.yaml
+  - https://raw.githubusercontent.com/anynines/a8s-deployment/v1.2.0/deploy/a8s/manifests/service-binding-controller.yaml
+  - https://raw.githubusercontent.com/anynines/a8s-deployment/v1.2.0/deploy/a8s/manifests/backup-manager.yaml
+  - https://raw.githubusercontent.com/anynines/a8s-deployment/v1.2.0/deploy/a8s/manifests/postgresql-images.yaml

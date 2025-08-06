@@ -1,0 +1,86 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: klutch-bind-backend
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: klutch-bind-backend
+roleRef: {apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: cluster-admin}
+subjects:
+- {kind: ServiceAccount, name: klutch-bind-backend}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: klutch-bind-backend
+spec:
+  type: LoadBalancer
+  ports:
+  - {name: klutch-bind-backend, port: 443, protocol: TCP, targetPort: 9443}
+  selector:
+    app: klutch-bind-backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: klutch-bind-backend
+  labels: {app: klutch-bind-backend}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: klutch-bind-backend}}
+  template:
+    metadata:
+      labels: {app: klutch-bind-backend}
+    spec:
+      serviceAccountName: klutch-bind-backend
+      containers:
+      - name: klutch-bind-backend
+        image: public.ecr.aws/w5n9a2g2/anynines/kubebind-backend:v1.3.0
+        args:
+        - --namespace-prefix=kube-bind-
+        - --pretty-name=anynines
+        - --consumer-scope=Namespaced
+        - --oidc-issuer-client-id=$(OIDC-ISSUER-CLIENT-ID)
+        - --oidc-issuer-client-secret=$(OIDC-ISSUER-CLIENT-SECRET)
+        - --oidc-issuer-url=$(OIDC-ISSUER-URL)
+        - --oidc-callback-url=$(OIDC-CALLBACK-URL)
+        - --listen-address=0.0.0.0:9443
+        - --cookie-signing-key=$(COOKIE-SIGNING-KEY)
+        - --cookie-encryption-key=$(COOKIE-ENCRYPTION-KEY)
+        - --external-address=$(EXTERNAL_ADDRESS)
+        - --external-ca-file=/certa/ca
+        env:
+        - name: OIDC-ISSUER-CLIENT-ID
+          valueFrom: {secretKeyRef: {name: oidc-config, key: OIDC-ISSUER-CLIENT-ID}}
+        - name: OIDC-ISSUER-CLIENT-SECRET
+          valueFrom: {secretKeyRef: {name: oidc-config, key: OIDC-ISSUER-CLIENT-SECRET}}
+        - name: OIDC-ISSUER-URL
+          valueFrom: {secretKeyRef: {name: oidc-config, key: OIDC-ISSUER-URL}}
+        - name: OIDC-CALLBACK-URL
+          valueFrom: {secretKeyRef: {name: oidc-config, key: OIDC-CALLBACK-URL}}
+        - name: COOKIE-SIGNING-KEY
+          valueFrom: {secretKeyRef: {name: cookie-config, key: COOKIE-SIGNING-KEY}}
+        - name: COOKIE-ENCRYPTION-KEY
+          valueFrom: {secretKeyRef: {name: cookie-config, key: COOKIE-ENCRYPTION-KEY}}
+        - name: EXTERNAL_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: klutch-bind-backend-config
+              key: external-address
+        volumeMounts:
+        - {name: ca, mountPath: /certa/}
+      volumes:
+      - name: ca
+        secret:
+          secretName: k8sca
+          items:
+          - {key: ca, path: ca}
+      - name: oidc-config
+        secret:
+          secretName: oidc-config
+      - name: cookie-config
+        secret:
+          secretName: cookie-config

@@ -1,0 +1,7 @@
+# This component installs the Klutch Crossplane Configuration package,
+# which defines the composite resources (XRDs) and compositions.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - configuration-package.yaml

@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - https://raw.githubusercontent.com/anynines/klutchio/v1.3.0/bind/deploy/crd/klutch.anynines.com_apiservicebindings.yaml
+  - https://raw.githubusercontent.com/anynines/klutchio/v1.3.0/bind/deploy/crd/klutch.anynines.com_apiserviceexportrequests.yaml
+  - https://raw.githubusercontent.com/anynines/klutchio/v1.3.0/bind/deploy/crd/klutch.anynines.com_apiserviceexports.yaml
+  - https://raw.githubusercontent.com/anynines/klutchio/v1.3.0/bind/deploy/crd/klutch.anynines.com_apiservicenamespaces.yaml
+  - https://raw.githubusercontent.com/anynines/klutchio/v1.3.0/bind/deploy/crd/klutch.anynines.com_clusterbindings.yaml
+  - https://raw.githubusercontent.com/anynines/klutchio/v1.3.0/release/bases/install/kube-bind-crds.yaml

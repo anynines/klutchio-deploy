@@ -1,0 +1,7 @@
+# This is the content from the original 'config-pkg-anynines.yaml'
+apiVersion: pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: anynines-dataservices
+spec:
+  package: public.ecr.aws/w5n9a2g2/klutch/dataservices:v1.3.0

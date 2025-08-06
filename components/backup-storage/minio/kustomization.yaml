@@ -1,0 +1,41 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: minio-dev
+resources:
+  - minio-namespace.yaml
+helmCharts:
+  - name: minio
+    repo: https://charts.min.io/
+    version: 5.4.0
+    releaseName: minio
+    namespace: minio-dev
+    valuesInline:
+      image:
+        repository: quay.io/minio/minio
+        tag: RELEASE.2024-12-18T13-15-44Z
+        pullPolicy: IfNotPresent
+      policies:
+        - name: readwrite-for-backups
+          statements:
+            - effect: "Allow"
+              actions: ["s3:*"]
+              resources: ["arn:aws:s3:::a8s-backups/*"]
+      buckets:
+        - name: a8s-backups
+          policy: none
+          purge: false
+      service:
+        type: ClusterIP
+        clusterIP: "None"
+        ports:
+          api: 9000
+          console: 9001
+      mode: standalone
+      replicas: 1
+      resources:
+        requests:
+          memory: 256Mi
+      persistence:
+        enabled: false
+      auth:
+        existingSecret: "minio-root-credentials"

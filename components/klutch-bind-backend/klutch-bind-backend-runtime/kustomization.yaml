@@ -1,0 +1,8 @@
+# klutch-install/base/klutch/backend-runtime/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: bind
+
+resources:
+  - resources.yaml
