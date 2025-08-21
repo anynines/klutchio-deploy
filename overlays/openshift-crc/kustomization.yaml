@@ -9,8 +9,8 @@ resources:
   - backend-route.yaml
   - dex-route.yaml  
   - a8s-backup-config.yaml
-  - a8s-anyuid-scc.yaml  
- 
+  - a8s-anyuid-scc.yaml
+
 configMapGenerator:
   - name: dex-config
     namespace: bind  
@@ -20,10 +20,6 @@ configMapGenerator:
     namespace: bind  
     literals:
       - external-address=https://api.crc.testing:6443
-#  - name: klutch-trusted-ca
-#    namespace: bind
-#    files:
-#    - ca.crt=ingress-ca-certificate.crt
 secretGenerator:
   - name: oidc-config
     namespace: bind
@@ -61,11 +57,6 @@ patches:
       kind: Service
       name: klutch-bind-backend
       namespace: bind
-#  - path: patches/add-oidc-ca-volume.patch.yaml
-#    target:
-#      kind: Deployment
-#      name: klutch-bind-backend
-#      namespace: bind
   - path: patches/pod-security-patch.yaml
     target:
       kind: Deployment
@@ -81,3 +72,41 @@ patches:
       kind: Deployment
       name: service-binding-controller-manager
       namespace: a8s-system      
+  - target:
+      group: rbac.authorization.k8s.io
+      version: v1
+      kind: ClusterRole
+      name: postgresql-manager-role
+    patch: |-
+      - op: add
+        path: /rules/-
+        value:
+          apiGroups:
+            - postgresql.anynines.com
+          resources:
+            - postgresqls/finalizers
+          verbs:
+            - update
+  - target:
+      group: rbac.authorization.k8s.io
+      version: v1
+      kind: ClusterRole
+      name: postgresql-spilo-role
+    patch: |-
+      - op: add
+        path: /rules/-
+        value:
+          apiGroups:
+            - ""
+          resources:
+            - endpoints/restricted
+          verbs:
+            - create
+            - delete
+            - deletecollection
+            - get
+            - list
+            - patch
+            - update
+            - watch
+

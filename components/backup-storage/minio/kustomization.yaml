@@ -20,6 +20,11 @@ helmCharts:
             - effect: "Allow"
               actions: ["s3:*"]
               resources: ["arn:aws:s3:::a8s-backups/*"]
+      users:
+      - accessKey: minioadmin
+        secretKey: minioadmin
+        policy: readwrite
+
       buckets:
         - name: a8s-backups
           policy: none

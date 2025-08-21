@@ -10,4 +10,4 @@ spec:
     kind: Service
     name: klutch-bind-backend
   port:
-    targetPort: klutch-backend
+    targetPort: klutch-bind-backend
