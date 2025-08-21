@@ -1,0 +1,112 @@
+# overlays/openshift-crc/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../components/data-services/a8s-framework
+  - ../../components/oidc/dex
+  - ../../components/klutch-bind-backend
+  - backend-route.yaml
+  - dex-route.yaml  
+  - a8s-backup-config.yaml
+  - a8s-anyuid-scc.yaml
+
+configMapGenerator:
+  - name: dex-config
+    namespace: bind  
+    files:
+      - config.yaml=dex-config.yaml
+  - name: klutch-bind-backend-config
+    namespace: bind  
+    literals:
+      - external-address=https://api.crc.testing:6443
+secretGenerator:
+  - name: oidc-config
+    namespace: bind
+    literals:
+      - OIDC-ISSUER-CLIENT-ID="kube-bind"
+      - OIDC-ISSUER-CLIENT-SECRET="aebca00f17a4940aa0569597"
+      - OIDC-ISSUER-URL="http://klutch.apps-crc.testing/dex"
+      - OIDC-CALLBACK-URL="http://klutch.apps-crc.testing/callback"
+  - name: k8sca
+    namespace: bind
+    files:
+      - ca=klutch-control-plane-ca.crt
+  - name: klutch-ingress-ca
+    namespace: bind
+    files:
+      - ca.crt=ingress-ca-certificate.crt    
+  - name: cookie-config
+    namespace: bind
+    literals: [COOKIE-SIGNING-KEY="tLkI842FNTANJhPsIZ1P7Dy4YJ78j+OJcBQD5nnRAcc=", COOKIE-ENCRYPTION-KEY="iAcRIaXLuv/OotuLqEB7HJx8JTbeHSJYkQx1NCRordA="]
+  - name: minio-root-credentials
+    namespace: minio-dev
+    literals:
+      - rootUser="minioadmin"
+      - rootPassword="minioadmin"
+  - name: minio
+    namespace: minio-dev
+    literals:
+      - rootUser="minioadmin"
+      - rootPassword="minioadmin"
+generatorOptions:
+  disableNameSuffixHash: true
+patches:
+  - path: patches/change-backend-service-to-clusterip.yaml
+    target:
+      kind: Service
+      name: klutch-bind-backend
+      namespace: bind
+  - path: patches/pod-security-patch.yaml
+    target:
+      kind: Deployment
+      name: a8s-backup-controller-manager
+      namespace: a8s-system
+  - path: patches/pod-security-patch.yaml
+    target:
+      kind: Deployment
+      name: postgresql-controller-manager
+      namespace: a8s-system
+  - path: patches/pod-security-patch.yaml
+    target:
+      kind: Deployment
+      name: service-binding-controller-manager
+      namespace: a8s-system      
+  - target:
+      group: rbac.authorization.k8s.io
+      version: v1
+      kind: ClusterRole
+      name: postgresql-manager-role
+    patch: |-
+      - op: add
+        path: /rules/-
+        value:
+          apiGroups:
+            - postgresql.anynines.com
+          resources:
+            - postgresqls/finalizers
+          verbs:
+            - update
+  - target:
+      group: rbac.authorization.k8s.io
+      version: v1
+      kind: ClusterRole
+      name: postgresql-spilo-role
+    patch: |-
+      - op: add
+        path: /rules/-
+        value:
+          apiGroups:
+            - ""
+          resources:
+            - endpoints/restricted
+          verbs:
+            - create
+            - delete
+            - deletecollection
+            - get
+            - list
+            - patch
+            - update
+            - watch
+
