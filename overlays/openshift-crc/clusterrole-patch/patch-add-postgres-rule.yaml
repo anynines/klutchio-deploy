@@ -1,0 +1,11 @@
+# This JSON Patch operation adds a new rule to the end of the existing 'rules' array.
+- op: add
+  path: /rules/-
+  value:
+    apiGroups:
+      - postgresql.anynines.com
+    resources:
+      - postgresqls/finalizers
+      - postgresqls
+    verbs:
+      - update

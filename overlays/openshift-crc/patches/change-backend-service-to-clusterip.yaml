@@ -1,0 +1,11 @@
+# This patch overrides the default service type for the Klutch backend.
+# The base component sets it to LoadBalancer, which is unnecessary and
+# causes network issues in Rancher Desktop. We change it to ClusterIP,
+# as it only needs to be accessible internally by the Ingress Controller.
+apiVersion: v1
+kind: Service
+metadata:
+  name: klutch-bind-backend
+  namespace: bind
+spec:
+  type: ClusterIP

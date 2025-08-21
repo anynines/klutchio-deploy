@@ -1,0 +1,13 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: klutch-bind-backend
+  namespace: bind
+spec:
+  host: klutch.apps-crc.testing
+  path: /
+  to:
+    kind: Service
+    name: klutch-bind-backend
+  port:
+    targetPort: klutch-bind-backend
