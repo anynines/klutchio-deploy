@@ -1,0 +1,39 @@
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: a8s-anyuid
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegedContainer: false
+allowedCapabilities: []
+defaultAddCapabilities: []
+fsGroup:
+  type: RunAsAny
+groups: []
+priority: 10
+readOnlyRootFilesystem: false
+requiredDropCapabilities:
+  - MKNOD
+runAsUser:
+  type: RunAsAny # <-- Allows pods to run as their specified user
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+users:
+  # --- Add the service accounts that need this permission ---
+  - system:serviceaccount:a8s-system:a8s-backup-manager-account
+  - system:serviceaccount:a8s-system:postgresql-manager-account
+  - system:serviceaccount:a8s-system:service-binding-manager-account
+  - system:serviceaccount:crossplane-system:crossplane
+  - system:serviceaccount:minio-dev:minio-sa  
+volumes:
+  - configMap
+  - downwardAPI
+  - emptyDir
+  - persistentVolumeClaim
+  - projected
+  - secret

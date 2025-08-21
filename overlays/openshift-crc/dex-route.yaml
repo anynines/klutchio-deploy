@@ -1,0 +1,13 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: dex
+  namespace: bind
+spec:
+  host: klutch.apps-crc.testing
+  path: /dex
+  to:
+    kind: Service
+    name: dex
+  port:
+    targetPort: dex

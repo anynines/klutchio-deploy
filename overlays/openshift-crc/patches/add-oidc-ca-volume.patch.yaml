@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: klutch-bind-backend # This must match the name of the deployment you are patching
+  namespace: bind
+spec:
+  template:
+    spec:
+      # This adds the 'oidc-cert' volume to the list of volumes in the pod spec.
+      # It points to the secret containing the OpenShift Ingress CA.
+      volumes:
+        - name: oidc-cert
+          secret:
+            secretName: klutch-ingress-ca
+
+      # This finds the container and adds the new volumeMount to its list.
+      containers:
+        - name: klutch-bind-backend # This must match the container name from your 'describe' output
+          volumeMounts:
+            - name: oidc-cert
+              mountPath: /etc/ssl/certs/ca-certificates.crt
+              subPath: ca.crt
