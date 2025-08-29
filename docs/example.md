@@ -24,7 +24,7 @@ servicebindings.anynines.com
 Navigate to the example directory:
 
 ```bash
-cd examples/
+cd example/
 ```
 
 Provision a PostgreSQL instance in your App Cluster:
@@ -49,7 +49,15 @@ credentials and connection details.
 Wait for the PostgreSQL to be ready. If it's your first time applying the manifest, it may take a couple of minutes to
 pull the container image.
 
-Then run:
+Then run one of the following scripts depending on your target platform:
+
+**OpenShift CRC**:
+
+```bash
+./2-setup-network-openshift-crc.sh
+```
+
+**Other platforms**:
 
 ```bash
 ./2-setup-network.sh

@@ -89,6 +89,7 @@ generic guide serves as a template to help you create a new overlay based on you
 *   **[Kind (with Docker Desktop)](docs/kind.md)**
 *   **[Rancher Desktop](docs/rancher-desktop.md)**
 *   **[AWS EKS](docs/aws.md)**
+*   **[OpenShift CRC](docs/openshift-crc.md)**
 
 ## Prerequisites
 

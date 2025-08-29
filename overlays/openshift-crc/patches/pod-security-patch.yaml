@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # The name here is just a placeholder to make the file valid.
+  # The actual deployments are selected by the 'target' in kustomization.yaml.
+  name: security-patch
+  namespace: a8s-system  
+spec:
+  template:
+    spec:
+      securityContext:
+        runAsUser: ~
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: manager
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+        - name: kube-rbac-proxy
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
