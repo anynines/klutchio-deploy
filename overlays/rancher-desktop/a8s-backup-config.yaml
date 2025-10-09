@@ -14,8 +14,6 @@ data:
         path_style: true
 
 ---
-# 2. Secret containing the credentials for the backup store.
-# This should be managed locally and NOT committed to Git, just like the Minio secret.
 apiVersion: v1
 kind: Secret
 metadata:
@@ -23,8 +21,6 @@ metadata:
   namespace: a8s-system
 type: Opaque
 stringData:
-  # These are the credentials for the 'a8s-user' we created in the Minio component
-  access-key-id: a8s-user
-  secret-access-key: a8s-password
+  access-key-id: minioadmin
+  secret-access-key: minioadmin
   encryption-password: "C9v%EL5a4PZpM8zNXqfHlxAuGR&|OJ/>ny^kWI0he21VY*#ob3g-c+K7TtSrmw6s"
-  # For real AWS S3, you would put your IAM user credentials here.

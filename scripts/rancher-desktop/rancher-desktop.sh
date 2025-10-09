@@ -60,6 +60,9 @@ echo "⏳ Waiting for platform stack components (ingress-nginx, bind) to be read
 kubectl wait deployment --all -n ingress-nginx --for=condition=Available --context "${RANCHER_CONTEXT}" --timeout=5m
 kubectl wait deployment/dex -n bind --for=condition=Available --context "${RANCHER_CONTEXT}" --timeout=5m
 
+echo "🔄 Forcing restart of MinIO to ensure it loads the new credentials..."
+kubectl rollout restart deployment/minio -n minio-dev
+
 # Install Crossplane core
 echo "📦 Installing Crossplane core components..."
 kustomize build --enable-helm components/crossplane/core | kubectl --context "${RANCHER_CONTEXT}" apply -f -
