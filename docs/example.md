@@ -51,16 +51,22 @@ pull the container image.
 
 Then run one of the following scripts depending on your target platform:
 
+**kind**:
+
+```bash
+./2-setup-network.sh
+```
+
+**Rancher Desktop**:
+
+```bash
+./2-setup-network-rancher-desktop.sh
+```
+
 **OpenShift CRC**:
 
 ```bash
 ./2-setup-network-openshift-crc.sh
-```
-
-**Other platforms**:
-
-```bash
-./2-setup-network.sh
 ```
 
 This bridges the Control Plane to the PostgreSQL service in the App Cluster by applying a dummy service and setting up

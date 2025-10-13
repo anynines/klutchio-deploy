@@ -46,14 +46,12 @@ for your operating system. *Tested with version:* 1.19.3
 5.  **Install k3d**: The setup script uses `k3d` to create a separate application cluster. If you don't have it, install it now:
     *   [k3d Installation Guide](https://k3d.io/v5.4.1/#installation)
 
-
 ## Automated installation using a setup script
 
 > **NOTE:  The Rancher-Desktop overlay is for development and testing only**
 >
 > The provided script and the rancher-desktop Kustomize overlay are intended solely for local development and testing. This
 setup is not secure, it uses plain HTTP for endpoints and includes hardcoded secrets and credentials. **Do not use this configuration in production environments.**
-
 
 Once your Rancher Desktop environment is correctly configured, the rest of the installation is automated.
 
@@ -112,6 +110,11 @@ You can now start provisioning data services, your App Cluster is fully configur
 
 **Note:** If the login page displays a `400 Bad Request` or `Request Header Or Cookie Too Large` error, please **clear the cookies**
 for the `host.lima.internal` site in your browser and try again.
+
+## Next Steps
+
+Klutch is now installed on your Rancher Desktop environment. You can proceed to the
+[Deploying a Demo Application](/docs/example.md) to test your setup by provisioning a PostgreSQL database.
 
 ## Cleanup
 
