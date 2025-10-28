@@ -24,10 +24,10 @@ dependencies across various Kubernetes environments.
 
 ## Overview
 
-KlutchIO is an open-source, Kubernetes-native tool designed to simplify data service management across multiple clusters.
+Klutch is an open-source, Kubernetes-native tool designed to simplify data service management across multiple clusters.
 To learn more about its concepts and architecture, you can visit the official documentation at https://klutch.io/docs/.
 
-This repository provides the necessary Kustomize configurations and automation scripts to install KlutchIO, structured
+This repository provides the necessary Kustomize configurations and automation scripts to install Klutch, structured
 using a Kustomize base/overlay pattern:
 
 *   `components/`: Includes the core services required to run Klutch, such as the Klutch backend, Crossplane, the a8s
@@ -53,12 +53,12 @@ with Klutch.
 
 Core components include:
 
-*   **KlutchIO Backend**: The central component that manages service exports and bindings.
+*   **Klutch Backend**: The central component that manages service exports and bindings.
 *   **Authentication (OIDC)**: Handles authentication for connecting application clusters. The choice of provider can be
 tailored to the environment. For example, local development setups might use **Dex** for its simplicity, while production
 environments could integrate with a more robust solution like **Keycloak** for enterprise-grade features.
 *   **Crossplane**: Acts as the underlying infrastructure-as-code framework. This installation includes the core
-Crossplane engine, provider-kubernetes for managing resources within the cluster, and a custom KlutchIO Configuration
+Crossplane engine, provider-kubernetes for managing resources within the cluster, and a custom Klutch Configuration
 package.
 *   **Data Services Framework**: Provides the actual data services to be provisioned. Currently, the **anynines DataServices Framework**
 for PostgreSQL is supported by default. However, the architecture is extensible, with plans to support additional data
@@ -175,7 +175,7 @@ For components managed by **Helm charts**, you can update the chart version dire
 
 For components deployed as standard Kubernetes **Deployments**, their version is controlled by the container image tag.
 
-*   **Components**: KlutchIO Backend, Dex.
+*   **Components**: Klutch Backend, Dex.
 *   **How to Update**:
     1.  Navigate to the component's directory (e.g., `components/oidc/dex/`).
     2.  Open the `resources.yaml` file.
@@ -185,9 +185,9 @@ For components deployed as standard Kubernetes **Deployments**, their version is
 
 For components installed from **remote manifest files**, their version is embedded directly in the URL or package identifier.
 
-*   **Components**: a8s Data Services Framework, KlutchIO CRDs, KlutchIO Crossplane Configuration.
+*   **Components**: a8s Data Services Framework, Klutch CRDs, Klutch Crossplane Configuration.
 *   **How to Update**:
     *   For the **a8s Framework and Klutch CRDs**, find the relevant `kustomization.yaml` files (e.g., `components/data-services/a8s-framework/core/`)
     and update the version tag within the `https://...` resource URLs.
-    *   For the **KlutchIO Crossplane Configuration**, edit the `configuration-package.yaml` file in its component
+    *   For the **Klutch Crossplane Configuration**, edit the `configuration-package.yaml` file in its component
     directory and update the version tag in the `spec.package` image string.
