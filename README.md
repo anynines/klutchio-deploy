@@ -1,5 +1,5 @@
 # Klutch Installation Guide
-
+## Note: This repository is currently not being maintained!!
 This repository provides the necessary Kustomize configurations and automation scripts to install Klutch and its
 dependencies across various Kubernetes environments.
 
